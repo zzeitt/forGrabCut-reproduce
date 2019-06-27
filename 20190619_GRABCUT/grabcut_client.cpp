@@ -73,9 +73,12 @@ void GrabCutClient::onMouseMember(int event, int x, int y, int flags,
 
 void GrabCutClient::iterateLabelMask() {
   (mask_alpha(rect_fgd)).setTo(Scalar(GC_PR_FGD));
-  gc_method.initPixelsVec(img_src, mask_alpha);
+  
   /*这里写grabcut方法执行的代码*/
   //......
+  gc_method.initPixelsVec(img_src, mask_alpha);
+  gc_method.clusterPixels();
+  gc_method.fitTwoGMMs();
 }
 
 void GrabCutClient::showDstImage() {

@@ -12,11 +12,11 @@ class GrabCutMethod {
   int i_bgd_comp;             // 背景组分个数
   Mat img_src;                // 原图
   Mat mask_alpha;             // 标签矩阵
-  vector<Vec3b> vec_pixs_fgd; // 前景像素向量
-  vector<Vec3b> vec_pixs_bgd; // 背景向量
-  Mat mat_pixs_fgd;           // 前景像素矩阵
-  Mat mat_pixs_bgd;           // 背景矩阵
-  Mat mat_pixs_fgd_k;         // 前景像素模型索引
+  vector<Vec3b> vec_pixs_fgd; // 前景像素（向量）
+  vector<Vec3b> vec_pixs_bgd; // 背景（向量）
+  Mat mat_pixs_fgd;           // 前景像素（矩阵）：n行x3列
+  Mat mat_pixs_bgd;           // 背景（矩阵）
+  Mat mat_pixs_fgd_k;         // 前景像素模型索引：n行x1列
   Mat mat_pixs_bgd_k;         // 背景索引
   GMM gmm_fgd;                // 前景高斯模型
   GMM gmm_bgd;                // 背景模型
@@ -26,5 +26,5 @@ class GrabCutMethod {
                 int i_bgd_comp_dim_arg);
   void initPixelsVec(Mat img, Mat mask);
   void clusterPixels();
-  void fitGMMs();
+  void fitTwoGMMs();
 };

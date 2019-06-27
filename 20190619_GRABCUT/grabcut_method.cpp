@@ -24,6 +24,7 @@ void GrabCutMethod::initPixelsVec(Mat img, Mat mask) {
 }
 
 void GrabCutMethod::clusterPixels() {
+  // 向量转化为kmeans可接受的矩阵形式
   Mat mat_pixs_fgd_channel(vec_pixs_fgd);
   int i_rows_new_fgd = mat_pixs_fgd_channel.rows * mat_pixs_fgd_channel.cols;
   mat_pixs_fgd = mat_pixs_fgd_channel.reshape(1, i_rows_new_fgd);
@@ -49,4 +50,7 @@ void GrabCutMethod::clusterPixels() {
   }
 }
 
-void GrabCutMethod::fitGMMs() {}
+void GrabCutMethod::fitTwoGMMs() {
+  gmm_fgd.fitGMM(mat_pixs_fgd_k, vec_pixs_fgd);
+  gmm_bgd.fitGMM(mat_pixs_bgd_k, vec_pixs_bgd);
+}
