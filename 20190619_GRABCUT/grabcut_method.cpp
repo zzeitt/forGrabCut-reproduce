@@ -46,11 +46,24 @@ void GrabCutMethod::clusterPixels() {
   } catch (char* str) {
     cout << "【Error】: " << str << endl;
   } catch (...) {
-    cout << "【Error】: " << "KMeans failed..." << endl;
+    cout << "【Error】: "
+         << "KMeans failed..." << endl;
   }
 }
 
 void GrabCutMethod::fitTwoGMMs() {
+  // GMM根据掩膜和像素进行学习拟合
   gmm_fgd.fitGMM(mat_pixs_fgd_k, vec_pixs_fgd);
   gmm_bgd.fitGMM(mat_pixs_bgd_k, vec_pixs_bgd);
+}
+
+void GrabCutMethod::updateTwoIndexMat() {
+  for (int i = 0; i < mat_pixs_fgd_k.rows; i++) {
+    Vec3b pix_iter = vec_pixs_fgd[i];
+    mat_pixs_fgd_k.at<int>(i, 0) = gmm_fgd.findMostLikelyGau(pix_iter);
+  }
+  for (int i = 0; i < mat_pixs_bgd_k.rows; i++) {
+    Vec3b pix_iter = vec_pixs_bgd[i];
+    mat_pixs_bgd_k.at<int>(i, 0) = gmm_bgd.findMostLikelyGau(pix_iter);
+  }
 }

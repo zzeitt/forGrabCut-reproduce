@@ -8,7 +8,7 @@ GrabCutClient::GrabCutClient(String file_path)
     if (img_src.empty()) {
       throw "Empty image!";
     }
-  } catch (char * str) {
+  } catch (char* str) {
     cout << "【Error】: " << str << endl;
     Mat img_exception(200, 300, CV_8UC3, Scalar(127, 127, 127));
     img_src = img_exception;
@@ -73,11 +73,13 @@ void GrabCutClient::onMouseMember(int event, int x, int y, int flags,
 
 void GrabCutClient::iterateLabelMask() {
   (mask_alpha(rect_fgd)).setTo(Scalar(GC_PR_FGD));
-  
+
   /*这里写grabcut方法执行的代码*/
   //......
   gc_method.initPixelsVec(img_src, mask_alpha);
   gc_method.clusterPixels();
+  gc_method.fitTwoGMMs();
+  gc_method.updateTwoIndexMat();
   gc_method.fitTwoGMMs();
 }
 
