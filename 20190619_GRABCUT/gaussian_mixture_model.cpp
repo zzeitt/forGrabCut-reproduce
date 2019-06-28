@@ -1,5 +1,6 @@
 #include "gaussian_mixture_model.h"
 
+/*******************高斯函数*******************/
 Gau::Gau(int dim) : i_dim{dim}, i_pix_count{0} {
   mat_mean = Mat::zeros(1, i_dim, CV_64FC1);  // 行向量
   mat_cov = Mat::zeros(i_dim, i_dim, CV_64FC1);
@@ -21,13 +22,13 @@ void Gau::doComputation(int i_pix_gmm_count) {
   // 计算均值和协方差
   calcCovarMatrix(mat_pixs_gau, mat_cov, mat_mean, COVAR_ROWS | COVAR_NORMAL);
   mat_cov /= i_rows_new;
-  cout << "==================Gau==================" << endl;
-  cout << "【cov】:" << endl;
-  cout << mat_cov << endl;
-  cout << "【mean】:" << endl;
-  cout << mat_mean << endl;
-  cout << "【weight】:" << endl;
-  cout << d_weight << endl;
+  //cout << "==================Gau==================" << endl;
+  //cout << "【cov】:" << endl;
+  //cout << mat_cov << endl;
+  //cout << "【mean】:" << endl;
+  //cout << mat_mean << endl;
+  //cout << "【weight】:" << endl;
+  //cout << d_weight << endl;
 }
 
 double Gau::calcProbability(Vec3b pix) {
@@ -49,6 +50,7 @@ double Gau::calcProbability(Vec3b pix) {
   return d_ret;
 }
 
+/*******************高斯混合模型*******************/
 GMM::GMM(int n, int d) : i_comp_count{n}, i_comp_dim{d}, i_pix_gmm_count{0} {
   for (int i = 0; i < i_comp_count; i++) {
     Gau gau_iter(i_comp_dim);
@@ -82,4 +84,12 @@ int GMM::findMostLikelyGau(Vec3b pix) {
     }
   }
   return i_comp_max_index;
+}
+
+double GMM::sumProbability(Vec3b pix) {
+  double d_sum = 0.0;
+  for (int i = 0; i < i_comp_count; i++) {
+    d_sum += vec_comp_gau[i].calcProbability(pix);
+  }
+  return d_sum;
 }

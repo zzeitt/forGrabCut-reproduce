@@ -27,6 +27,15 @@
     <ClCompile Include="grabcut_method.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="VladimirKolmogorov\graph.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="VladimirKolmogorov\maxflow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="grabcut_graph.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grabcut_client.h">
@@ -38,5 +47,24 @@
     <ClInclude Include="gaussian_mixture_model.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="VladimirKolmogorov\block.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VladimirKolmogorov\graph.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="grabcut_graph.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VladimirKolmogorov\instances.inc">
+      <Filter>头文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="owl.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

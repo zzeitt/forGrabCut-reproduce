@@ -1,4 +1,5 @@
 #include "grabcut_method.h"
+#include "grabcut_graph.h"
 
 GrabCutMethod::GrabCutMethod(int i_fgd_comp_arg, int i_fgd_comp_dim_arg,
                              int i_bgd_comp_arg, int i_bgd_comp_dim_arg)
@@ -67,3 +68,14 @@ void GrabCutMethod::updateTwoIndexMat() {
     mat_pixs_bgd_k.at<int>(i, 0) = gmm_bgd.findMostLikelyGau(pix_iter);
   }
 }
+
+void GrabCutMethod::updateMaskAlpha() {
+  GrabCutGraph gc_graph(img_src, mask_alpha);
+  gc_graph.calcBeta();
+  gc_graph.calcWeight(gmm_fgd, gmm_bgd);
+  gc_graph.assignWeight();
+  gc_graph.doMinimumCut();
+  mask_alpha = gc_graph.getMaskAlpha();
+}
+
+Mat GrabCutMethod::getMaskAlpha() { return mask_alpha; }

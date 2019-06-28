@@ -117,13 +117,25 @@
   <ItemGroup>
     <ClInclude Include="gaussian_mixture_model.h" />
     <ClInclude Include="grabcut_client.h" />
+    <ClInclude Include="grabcut_graph.h" />
     <ClInclude Include="grabcut_method.h" />
+    <ClInclude Include="VladimirKolmogorov\block.h" />
+    <ClInclude Include="VladimirKolmogorov\graph.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gaussian_mixture_model.cpp" />
     <ClCompile Include="grabcut_client.cpp" />
+    <ClCompile Include="grabcut_graph.cpp" />
     <ClCompile Include="grabcut_method.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="VladimirKolmogorov\graph.cpp" />
+    <ClCompile Include="VladimirKolmogorov\maxflow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VladimirKolmogorov\instances.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="owl.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

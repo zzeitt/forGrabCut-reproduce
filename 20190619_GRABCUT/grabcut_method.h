@@ -20,7 +20,6 @@ class GrabCutMethod {
   Mat mat_pixs_bgd_k;          // 背景索引
   GMM gmm_fgd;                 // 前景高斯模型
   GMM gmm_bgd;                 // 背景模型
-
  public:
   GrabCutMethod(int i_fgd_comp_arg, int i_fgd_comp_dim_arg, int i_bgd_comp_arg,
                 int i_bgd_comp_dim_arg);
@@ -28,4 +27,6 @@ class GrabCutMethod {
   void clusterPixels();                   // 像素聚类
   void fitTwoGMMs();                      // 前/背景GMM拟合
   void updateTwoIndexMat();               // 更新高斯堆索引
+  void updateMaskAlpha();                 // 更新mask_alpha
+  Mat getMaskAlpha();                     // 传递mask_alpha给gc_client
 };
