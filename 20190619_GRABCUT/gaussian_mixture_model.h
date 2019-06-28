@@ -18,7 +18,9 @@ class Gau {
  public:
   Gau(int dim);
   void addPixel(Vec3b pix);                 // 为高斯堆添加像素
+  void clearPixels();                       // 清堆内空像素
   void doComputation(int i_pix_gmm_count);  // 根据添加的像素计算13个参数
+  double getWeight();                       // 访问权重值
   double calcProbability(Vec3b pix);  // 输入单个像素，输出对应概率
 };
 

@@ -35,7 +35,7 @@ GrabCutClient::GrabCutClient(String file_path, int i_iterate_arg)
   char c = waitKey(0);
   if (c == 'g') {
     iterateLabelMask();
-    // showDstImage();
+    showDstImage();
   }
   waitKey(0);
   destroyAllWindows();
@@ -87,6 +87,7 @@ void GrabCutClient::iterateLabelMask() {
   // 初始化
   gc_method.initPixelsVec(img_src, mask_alpha);
   gc_method.clusterPixels();
+  gc_method.fitTwoGMMs();
   cout << endl << " ===================>>>【初始化完成】" << endl;
   // 迭代中......
   for (int i = 0; i < i_iterate; i++) {
@@ -95,6 +96,7 @@ void GrabCutClient::iterateLabelMask() {
          << endl;
     auto start = high_resolution_clock::now();  // 计时开始
     /////////// 耗时部分 ///////////
+    gc_method.updateTwoIndexMat();
     gc_method.fitTwoGMMs();
     gc_method.updateMaskAlpha();
     mask_alpha = gc_method.getMaskAlpha();
@@ -106,7 +108,7 @@ void GrabCutClient::iterateLabelMask() {
     cout << " ===================>>>【第（" << (i + 1) << "）次迭代用时 "
          << i_time_du << " 秒】" << endl
          << endl;
-    showDstImage();
+    // showDstImage();
   }
   cout << endl
        << " ===================>>>【共计用时" << i_time_total << "秒】" << endl;

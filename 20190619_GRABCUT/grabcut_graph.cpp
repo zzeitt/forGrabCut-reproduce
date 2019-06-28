@@ -5,7 +5,8 @@ GrabCutGraph::GrabCutGraph(Mat img_src_arg, Mat mask_alpha_arg)
       i_edge_count{2 * (4 * img_src_arg.cols * img_src_arg.rows -
                         3 * (img_src_arg.cols + img_src_arg.rows) + 2)},
       d_beta{0.0},
-      graph_to_cut{i_vertex_count, i_edge_count} {
+      graph_to_cut{i_vertex_count, i_edge_count},
+      d_energy{-1.0} {
   // 拷贝原图和掩膜
   img_src_copy = img_src_arg;
   mask_alpha_copy = mask_alpha_arg;
@@ -137,7 +138,7 @@ void GrabCutGraph::assignWeight() {
 
 void GrabCutGraph::doMinimumCut() {
   // 通过最大流实现最小割
-  graph_to_cut.maxflow();
+  d_energy = graph_to_cut.maxflow();
   // 注意，要开始更新mask_alpha了
   for (int r = 0; r < img_src_copy.rows; r++) {
     for (int c = 0; c < img_src_copy.cols; c++) {
@@ -153,6 +154,8 @@ void GrabCutGraph::doMinimumCut() {
       }
     }
   }
+  cout << "** energy **:" << endl;
+  cout << d_energy << endl;
 }
 
 Mat GrabCutGraph::getMaskAlpha() { return mask_alpha_copy; }

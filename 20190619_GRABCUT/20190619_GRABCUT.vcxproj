@@ -135,6 +135,7 @@
     <None Include="VladimirKolmogorov\instances.inc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="owl-test.jpg" />
     <Image Include="owl.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

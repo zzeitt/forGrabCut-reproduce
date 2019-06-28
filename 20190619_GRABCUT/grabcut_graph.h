@@ -20,6 +20,7 @@ class GrabCutGraph {
   Mat mat_penalty_b_upright;                   // 边界判罚：右上
   Graph<double, double, double> graph_to_cut;  // 待割的图，三个double
                                                // 为容量和流量的数据类型
+  double d_energy;  // 图割后花费的能量
  public:
   GrabCutGraph(Mat img_src_arg, Mat mask_alpha_arg);
   void calcBeta();                                    // 计算beta

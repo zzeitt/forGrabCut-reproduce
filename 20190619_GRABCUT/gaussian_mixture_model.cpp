@@ -12,9 +12,11 @@ void Gau::addPixel(Vec3b pix) {
   i_pix_count = vec_pixs_gau.size();  // 更新像素个数值
 }
 
+void Gau::clearPixels() { vec_pixs_gau.clear(); }
+
 void Gau::doComputation(int i_pix_gmm_count) {
   // 权重赋值
-  d_weight = (double)i_pix_count / i_pix_gmm_count;
+  d_weight = (double)i_pix_count / (double)i_pix_gmm_count;
   // 向量转矩阵
   Mat mat_pixs_gau_channel(vec_pixs_gau);
   int i_rows_new = mat_pixs_gau_channel.rows * mat_pixs_gau_channel.cols;
@@ -22,14 +24,17 @@ void Gau::doComputation(int i_pix_gmm_count) {
   // 计算均值和协方差
   calcCovarMatrix(mat_pixs_gau, mat_cov, mat_mean, COVAR_ROWS | COVAR_NORMAL);
   mat_cov /= i_rows_new;
-  //cout << "==================Gau==================" << endl;
-  //cout << "【cov】:" << endl;
-  //cout << mat_cov << endl;
-  //cout << "【mean】:" << endl;
-  //cout << mat_mean << endl;
-  //cout << "【weight】:" << endl;
-  //cout << d_weight << endl;
+  // 输出测试
+  // cout << "==================Gau==================" << endl;
+  // cout << "【cov】:" << endl;
+  // cout << mat_cov << endl;
+  // cout << "【mean】:" << endl;
+  // cout << mat_mean << endl;
+  // cout << "【weight】:" << endl;
+  // cout << d_weight << endl;
 }
+
+double Gau::getWeight() { return d_weight; }
 
 double Gau::calcProbability(Vec3b pix) {
   // 像素向量转矩阵
@@ -60,8 +65,11 @@ GMM::GMM(int n, int d) : i_comp_count{n}, i_comp_dim{d}, i_pix_gmm_count{0} {
 
 void GMM::fitGMM(Mat mat_k, vector<Vec3b> vec_pixs) {
   // mat_k是n行x1列的索引矩阵
-  // 先将像素信息传给GMM
+
   i_pix_gmm_count = mat_k.rows;
+  for (int i = 0; i < i_comp_count; i++) {
+    vec_comp_gau[i].clearPixels();
+  }
   for (int i = 0; i < i_pix_gmm_count; i++) {
     int i_comp_index = mat_k.at<int>(i, 0);
     Vec3b pix_to_add = vec_pixs[i];
@@ -89,7 +97,7 @@ int GMM::findMostLikelyGau(Vec3b pix) {
 double GMM::sumProbability(Vec3b pix) {
   double d_sum = 0.0;
   for (int i = 0; i < i_comp_count; i++) {
-    d_sum += vec_comp_gau[i].calcProbability(pix);
+    d_sum += vec_comp_gau[i].getWeight() * vec_comp_gau[i].calcProbability(pix);
   }
   return d_sum;
 }
