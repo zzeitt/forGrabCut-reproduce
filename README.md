@@ -1,5 +1,6 @@
 # Reproduce-GrabCut
-> ### Reproduced a paper titled [*"GrabCut": interactive foreground extraction using iterated graph cuts*][1]
+> ### Reproduced a paper: 
+> ### [*"GrabCut": interactive foreground extraction using iterated graph cuts*][1]
 
 ## Structure
 * GrabCutClient
