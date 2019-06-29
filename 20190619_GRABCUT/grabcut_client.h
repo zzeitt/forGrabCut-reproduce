@@ -2,6 +2,7 @@
 #pragma warning(disable : 4996)
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <chrono>
 #include "grabcut_method.h"
 
 using namespace cv;
@@ -26,5 +27,5 @@ class GrabCutClient {
   static void onMouse(int event, int x, int y, int flags, void* userdata);
   void iterateLabelMask();  // 前景掩膜处理
   void showDstImage();      // 结果显示
-  void saveTwoImages(string s_date);     // 保存图片
+  void saveTwoImages(string s_date, string s_time_elapse);     // 保存图片
 };

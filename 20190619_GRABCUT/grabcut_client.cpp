@@ -1,6 +1,5 @@
 #include "grabcut_client.h"
 #include <time.h>
-#include <chrono>
 
 using namespace std::chrono;
 
@@ -49,6 +48,7 @@ GrabCutClient::GrabCutClient(String file_path, int i_iterate_arg,
     cout << endl
          << " ===================>>>【共计用时" << duration.count() << "秒】"
          << endl;
+    string s_time_elapse = to_string(duration.count());
     showDstImage();
     cout << endl << " ===================>>>【按 s 键保存】" << endl;
     char s = waitKey(0);
@@ -58,7 +58,7 @@ GrabCutClient::GrabCutClient(String file_path, int i_iterate_arg,
       ostringstream os;
       os << put_time(gmtime(&now), "%F-%H-%M-%S");
       // 保存图片
-      saveTwoImages(os.str());
+      saveTwoImages(os.str(), s_time_elapse);
     }
     waitKey(0);
     destroyAllWindows();
@@ -145,12 +145,17 @@ void GrabCutClient::showDstImage() {
   imshow(win_dst, img_dst);
 }
 
-void GrabCutClient::saveTwoImages(string s_date) {
-  string s_src =
-      (string) "results/" + (string) "src-" + (string)s_date + ".jpg";
+void GrabCutClient::saveTwoImages(string s_date, string s_time_elapse) {
+  string s_head = "results/";
+  string s_stamp = (string)s_date + "_" + to_string(i_iterate) + "_iter_" +
+                   s_time_elapse + "_s";
+  if (b_opencv) {
+    s_stamp += "_OpenCV";
+  }
+  string s_ext = ".jpg";
+  string s_src = s_head + "src-" + s_stamp + s_ext;
+  string s_dst = s_head + "dst-" + s_stamp + s_ext;
   bool b_success_src = imwrite(s_src, img_src_2);
-  string s_dst =
-      (string) "results/" + (string) "dst-" + (string)s_date + ".jpg";
   bool b_success_dst = imwrite(s_dst, img_dst);
   if (b_success_src == false || b_success_dst == false) {
     cout << " ===================>>>【Failed to save the image!】" << endl;
