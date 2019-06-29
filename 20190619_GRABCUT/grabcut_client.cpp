@@ -86,6 +86,7 @@ void GrabCutClient::iterateLabelMask() {
   /*这里写grabcut方法执行的代码*/
   // 初始化
   gc_method.initPixelsVec(img_src, mask_alpha);
+  GrabCutGraph gc_graph = gc_method.initGraph();
   gc_method.clusterPixels();
   gc_method.fitTwoGMMs();
   cout << endl << " ===================>>>【初始化完成】" << endl;
@@ -98,7 +99,7 @@ void GrabCutClient::iterateLabelMask() {
     /////////// 耗时部分 ///////////
     gc_method.updateTwoIndexMat();
     gc_method.fitTwoGMMs();
-    gc_method.updateMaskAlpha();
+    gc_method.updateMaskAlpha(gc_graph);
     mask_alpha = gc_method.getMaskAlpha();
     ///////////////////////////////
     auto stop = high_resolution_clock::now();  //计时结束
@@ -108,7 +109,7 @@ void GrabCutClient::iterateLabelMask() {
     cout << " ===================>>>【第（" << (i + 1) << "）次迭代用时 "
          << i_time_du << " 秒】" << endl
          << endl;
-    // showDstImage();
+    //showDstImage();
   }
   cout << endl
        << " ===================>>>【共计用时" << i_time_total << "秒】" << endl;

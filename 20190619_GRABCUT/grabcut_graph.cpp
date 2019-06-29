@@ -5,23 +5,19 @@ GrabCutGraph::GrabCutGraph(Mat img_src_arg, Mat mask_alpha_arg)
       i_edge_count{2 * (4 * img_src_arg.cols * img_src_arg.rows -
                         3 * (img_src_arg.cols + img_src_arg.rows) + 2)},
       d_beta{0.0},
+      d_gamma{50.0},
       graph_to_cut{i_vertex_count, i_edge_count},
       d_energy{-1.0} {
   // 拷贝原图和掩膜
   img_src_copy = img_src_arg;
   mask_alpha_copy = mask_alpha_arg;
-  // 初始化各判罚矩阵
-  mat_penalty_r_fgd = Mat::zeros(img_src_arg.size(), CV_64FC1);
-  mat_penalty_r_bgd = Mat::zeros(img_src_arg.size(), CV_64FC1);
-  mat_penalty_b_left = Mat::zeros(img_src_arg.size(), CV_64FC1);
-  mat_penalty_b_up = Mat::zeros(img_src_arg.size(), CV_64FC1);
-  mat_penalty_b_upleft = Mat::zeros(img_src_arg.size(), CV_64FC1);
-  mat_penalty_b_upright = Mat::zeros(img_src_arg.size(), CV_64FC1);
-  // 计算beta
-  calcBeta();
+  // 计算beta并添加节点
+  initBetaAndNode();
+  // 分配邻边权重
+  assignBoundaryWeight();
 }
 
-void GrabCutGraph::calcBeta() {
+void GrabCutGraph::initBetaAndNode() {
   // 四个方向说明：
   //
   //   upleft   up  upright
@@ -31,6 +27,7 @@ void GrabCutGraph::calcBeta() {
   double d_square_sum = 0.0;
   for (int r = 0; r < img_src_copy.rows; r++) {
     for (int c = 0; c < img_src_copy.cols; c++) {
+      // 计算beta......
       Vec3b pix = img_src_copy.at<Vec3b>(r, c);
       if (c >= 1) {  // left
         Vec3b pix_diff = pix - img_src_copy.at<Vec3b>(r, c - 1);
@@ -48,90 +45,77 @@ void GrabCutGraph::calcBeta() {
         Vec3b pix_diff = pix - img_src_copy.at<Vec3b>(r - 1, c + 1);
         d_square_sum += pix_diff.dot(pix_diff);
       }
+      // 图添加节点
+      graph_to_cut.add_node();
     }
   }
   d_square_sum /= (double)i_edge_count;
   d_beta = (double)1 / (2 * d_square_sum);
 }
 
-void GrabCutGraph::calcWeight(GMM gmm_fgd_arg, GMM gmm_bgd_arg) {
-  double d_gamma = 50.0;          // 计算边界判罚的一个比例参数
-  double d_lambda = 9 * d_gamma;  // 确定性前/背景区域判罚值
+double GrabCutGraph::calcBoundrayPenalty(Vec3b pix_diff_arg) {
+  return d_gamma * exp(-d_beta * pix_diff_arg.dot(pix_diff_arg));
+}
+
+void GrabCutGraph::assignBoundaryWeight() {
   for (int r = 0; r < img_src_copy.rows; r++) {
     for (int c = 0; c < img_src_copy.cols; c++) {
       Vec3b pix = img_src_copy.at<Vec3b>(r, c);
-      // 计算源汇权重
-      if (mask_alpha_copy.at<uchar>(r, c) == GC_PR_BGD ||
-          mask_alpha_copy.at<uchar>(r, c) == GC_PR_FGD) {
-        mat_penalty_r_fgd.at<double>(r, c) =
-            -log(gmm_bgd_arg.sumProbability(pix));
-        // 属于前景的概率越高，折合所得分贝对数越小，故这里前/背景对调
-        mat_penalty_r_bgd.at<double>(r, c) =
-            -log(gmm_fgd_arg.sumProbability(pix));
-      } else if (mask_alpha_copy.at<uchar>(r, c) == GC_BGD) {
-        mat_penalty_r_fgd.at<double>(r, c) = 0;
-        mat_penalty_r_bgd.at<double>(r, c) = d_lambda;
-      } else if (mask_alpha_copy.at<uchar>(r, c) == GC_FGD) {
-        mat_penalty_r_fgd.at<double>(r, c) = d_lambda;
-        mat_penalty_r_bgd.at<double>(r, c) = 0;
-      }
-      //////////////////////////////////////////////////////
-      // 计算邻边权重
+      int i_vertex_id = r * img_src_copy.cols + c;
+      double d_weight_edge;
+
       if (c >= 1) {  // left
         Vec3b pix_diff = pix - img_src_copy.at<Vec3b>(r, c - 1);
-        mat_penalty_b_left.at<double>(r, c) =
-            d_gamma * exp(-d_beta * pix_diff.dot(pix_diff));
+        d_weight_edge = calcBoundrayPenalty(pix_diff);
+        graph_to_cut.add_edge(i_vertex_id, i_vertex_id - 1, d_weight_edge,
+                              d_weight_edge);
       }
       if (r >= 1 && c >= 1) {  // upleft
         Vec3b pix_diff = pix - img_src_copy.at<Vec3b>(r - 1, c - 1);
-        mat_penalty_b_upleft.at<double>(r, c) =
-            d_gamma * exp(-d_beta * pix_diff.dot(pix_diff));
+        d_weight_edge = calcBoundrayPenalty(pix_diff);
+        graph_to_cut.add_edge(i_vertex_id, i_vertex_id - 1, d_weight_edge,
+                              d_weight_edge);
       }
       if (r >= 1) {  // up
         Vec3b pix_diff = pix - img_src_copy.at<Vec3b>(r - 1, c);
-        mat_penalty_b_up.at<double>(r, c) =
-            d_gamma * exp(-d_beta * pix_diff.dot(pix_diff));
+        d_weight_edge = calcBoundrayPenalty(pix_diff);
+        graph_to_cut.add_edge(i_vertex_id, i_vertex_id - img_src_copy.cols,
+                              d_weight_edge, d_weight_edge);
       }
       if (r >= 1 && c <= img_src_copy.cols - 2) {  // upright
         Vec3b pix_diff = pix - img_src_copy.at<Vec3b>(r - 1, c + 1);
-        mat_penalty_b_upright.at<double>(r, c) =
-            d_gamma * exp(-d_beta * pix_diff.dot(pix_diff));
+        d_weight_edge = calcBoundrayPenalty(pix_diff);
+        graph_to_cut.add_edge(i_vertex_id, i_vertex_id - img_src_copy.cols + 1,
+                              d_weight_edge, d_weight_edge);
       }
     }
   }
 }
 
-void GrabCutGraph::assignWeight() {
+void GrabCutGraph::assignRegionalWeight(GMM gmm_fgd_arg, GMM gmm_bgd_arg) {
+  graph_to_cut.setFlow(0.0);      // flow置零
+  double d_lambda = 9 * d_gamma;  // 确定性前/背景区域判罚值
   for (int r = 0; r < img_src_copy.rows; r++) {
     for (int c = 0; c < img_src_copy.cols; c++) {
-      int i_vertex_id = graph_to_cut.add_node();
-      // 分配源汇权重
-      double d_weight_source = mat_penalty_r_fgd.at<double>(r, c);
-      double d_weight_sink = mat_penalty_r_bgd.at<double>(r, c);
+      Vec3b pix = img_src_copy.at<Vec3b>(r, c);
+      int i_vertex_id = r * img_src_copy.cols + c;
+      double d_weight_source, d_weight_sink;
+      // 初始化源汇权重
+      graph_to_cut.set_trcap(i_vertex_id, 0.0);
+      // 计算并分配源汇权重
+      if (mask_alpha_copy.at<uchar>(r, c) == GC_PR_BGD ||
+          mask_alpha_copy.at<uchar>(r, c) == GC_PR_FGD) {
+        d_weight_source = -log(gmm_bgd_arg.sumProbability(pix));
+        // 属于前景的概率越高，折合所得分贝对数越小，故这里前/背景对调
+        d_weight_sink = -log(gmm_fgd_arg.sumProbability(pix));
+      } else if (mask_alpha_copy.at<uchar>(r, c) == GC_BGD) {
+        d_weight_source = 0.0;
+        d_weight_sink = d_lambda;
+      } else if (mask_alpha_copy.at<uchar>(r, c) == GC_FGD) {
+        d_weight_source = d_lambda;
+        d_weight_sink = 0.0;
+      }
       graph_to_cut.add_tweights(i_vertex_id, d_weight_source, d_weight_sink);
-
-      // 分配邻边权重
-      double d_weight_edge;
-      if (c >= 1) {  // left
-        d_weight_edge = mat_penalty_b_left.at<double>(r, c);
-        graph_to_cut.add_edge(i_vertex_id, i_vertex_id - 1, d_weight_edge,
-                              d_weight_edge);
-      }
-      if (r >= 1 && c >= 1) {  // upleft
-        d_weight_edge = mat_penalty_b_upleft.at<double>(r, c);
-        graph_to_cut.add_edge(i_vertex_id, i_vertex_id - img_src_copy.cols - 1,
-                              d_weight_edge, d_weight_edge);
-      }
-      if (r >= 1) {  // up
-        d_weight_edge = mat_penalty_b_up.at<double>(r, c);
-        graph_to_cut.add_edge(i_vertex_id, i_vertex_id - img_src_copy.cols,
-                              d_weight_edge, d_weight_edge);
-      }
-      if (r >= 1 && c <= img_src_copy.cols - 2) {  // upright
-        d_weight_edge = mat_penalty_b_upright.at<double>(r, c);
-        graph_to_cut.add_edge(i_vertex_id, i_vertex_id - img_src_copy.cols + 1,
-                              d_weight_edge, d_weight_edge);
-      }
     }
   }
 }
@@ -154,8 +138,7 @@ void GrabCutGraph::doMinimumCut() {
       }
     }
   }
-  cout << "** energy **:" << endl;
-  cout << d_energy << endl;
+  cout << " ** energy **: " << d_energy << endl;
 }
 
 Mat GrabCutGraph::getMaskAlpha() { return mask_alpha_copy; }

@@ -63,10 +63,34 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="owl.jpg">
+    <Image Include="images\flamingo.jpg">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="owl-test.jpg">
+    <Image Include="images\owl.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\star.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\owl-test.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\star-test.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\eagle.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\fish.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\fox.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\white-bird-1.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\white-bird-2.jpg">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

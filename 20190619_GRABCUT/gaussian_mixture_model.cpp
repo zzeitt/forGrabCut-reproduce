@@ -12,18 +12,30 @@ void Gau::addPixel(Vec3b pix) {
   i_pix_count = vec_pixs_gau.size();  // 更新像素个数值
 }
 
-void Gau::clearPixels() { vec_pixs_gau.clear(); }
+void Gau::clearPixels() {
+  vec_pixs_gau.clear();
+  i_pix_count = vec_pixs_gau.size();
+}
 
 void Gau::doComputation(int i_pix_gmm_count) {
   // 权重赋值
   d_weight = (double)i_pix_count / (double)i_pix_gmm_count;
   // 向量转矩阵
-  Mat mat_pixs_gau_channel(vec_pixs_gau);
-  int i_rows_new = mat_pixs_gau_channel.rows * mat_pixs_gau_channel.cols;
-  mat_pixs_gau = mat_pixs_gau_channel.reshape(1, i_rows_new);  // 通道变为1
-  // 计算均值和协方差
-  calcCovarMatrix(mat_pixs_gau, mat_cov, mat_mean, COVAR_ROWS | COVAR_NORMAL);
-  mat_cov /= i_rows_new;
+  try {
+    Mat mat_pixs_gau_channel(vec_pixs_gau);
+    if (vec_pixs_gau.empty()) throw "This Gau is empty!";
+    int i_rows_new = mat_pixs_gau_channel.rows * mat_pixs_gau_channel.cols;
+    mat_pixs_gau = mat_pixs_gau_channel.reshape(1, i_rows_new);  // 通道变为1
+    // 计算均值和协方差
+    calcCovarMatrix(mat_pixs_gau, mat_cov, mat_mean, COVAR_ROWS | COVAR_NORMAL);
+    mat_cov /= i_rows_new;
+  } catch (char* str) {
+    mat_mean = Mat::zeros(1, i_dim, CV_64FC1);  // 行向量
+    mat_cov = Mat::ones(i_dim, i_dim, CV_64FC1);
+  } catch (...) {
+    mat_mean = Mat::zeros(1, i_dim, CV_64FC1);  // 行向量
+    mat_cov = Mat::ones(i_dim, i_dim, CV_64FC1);
+  }
   // 输出测试
   // cout << "==================Gau==================" << endl;
   // cout << "【cov】:" << endl;

@@ -1,5 +1,4 @@
 #include "grabcut_method.h"
-#include "grabcut_graph.h"
 
 GrabCutMethod::GrabCutMethod(int i_fgd_comp_arg, int i_fgd_comp_dim_arg,
                              int i_bgd_comp_arg, int i_bgd_comp_dim_arg)
@@ -54,7 +53,9 @@ void GrabCutMethod::clusterPixels() {
 
 void GrabCutMethod::fitTwoGMMs() {
   // GMM根据掩膜和像素进行学习拟合
+  // cout << "==================FGD==================" << endl;
   gmm_fgd.fitGMM(mat_pixs_fgd_k, vec_pixs_fgd);
+  // cout << "==================BGD==================" << endl;
   gmm_bgd.fitGMM(mat_pixs_bgd_k, vec_pixs_bgd);
 }
 
@@ -69,13 +70,15 @@ void GrabCutMethod::updateTwoIndexMat() {
   }
 }
 
-void GrabCutMethod::updateMaskAlpha() {
-  GrabCutGraph gc_graph(img_src, mask_alpha);
-  gc_graph.calcBeta();
-  gc_graph.calcWeight(gmm_fgd, gmm_bgd);
-  gc_graph.assignWeight();
-  gc_graph.doMinimumCut();
-  mask_alpha = gc_graph.getMaskAlpha();
+GrabCutGraph GrabCutMethod::initGraph() {
+  return GrabCutGraph(img_src, mask_alpha);
+}
+
+void GrabCutMethod::updateMaskAlpha(GrabCutGraph& gc_graph_arg) {
+  gc_graph_arg.assignRegionalWeight(gmm_fgd,
+                                    gmm_bgd);  // 分配区域的权重
+  gc_graph_arg.doMinimumCut();                 // 进行最小割
+  mask_alpha = gc_graph_arg.getMaskAlpha();
 }
 
 Mat GrabCutMethod::getMaskAlpha() { return mask_alpha; }

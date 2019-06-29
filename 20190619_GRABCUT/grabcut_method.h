@@ -2,6 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include "gaussian_mixture_model.h"
+#include "grabcut_graph.h"
 
 using namespace cv;
 using namespace std;
@@ -27,6 +28,7 @@ class GrabCutMethod {
   void clusterPixels();                   // 像素聚类
   void fitTwoGMMs();                      // 前/背景GMM拟合
   void updateTwoIndexMat();               // 更新高斯堆索引
-  void updateMaskAlpha();                 // 更新mask_alpha
-  Mat getMaskAlpha();                     // 传递mask_alpha给gc_client
+  GrabCutGraph initGraph();               // 初始化割图
+  void updateMaskAlpha(GrabCutGraph &gc_graph_arg);  // 更新mask_alpha
+  Mat getMaskAlpha();  // 传递mask_alpha给gc_client
 };
