@@ -135,15 +135,19 @@
     <None Include="VladimirKolmogorov\instances.inc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="images\eagle-test.jpg" />
     <Image Include="images\eagle.jpg" />
+    <Image Include="images\fish-test.jpg" />
     <Image Include="images\fish.jpg" />
+    <Image Include="images\flamingo-test.jpg" />
     <Image Include="images\flamingo.jpg" />
+    <Image Include="images\fox-test.jpg" />
     <Image Include="images\fox.jpg" />
     <Image Include="images\owl-test.jpg" />
     <Image Include="images\owl.jpg" />
-    <Image Include="images\star-test.jpg" />
-    <Image Include="images\star.jpg" />
+    <Image Include="images\white-bird-1-test.jpg" />
     <Image Include="images\white-bird-1.jpg" />
+    <Image Include="images\white-bird-2-test.jpg" />
     <Image Include="images\white-bird-2.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

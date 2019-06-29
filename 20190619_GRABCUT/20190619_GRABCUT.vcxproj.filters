@@ -69,13 +69,7 @@
     <Image Include="images\owl.jpg">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="images\star.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
     <Image Include="images\owl-test.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="images\star-test.jpg">
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="images\eagle.jpg">
@@ -91,6 +85,24 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="images\white-bird-2.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\eagle-test.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\fish-test.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\flamingo-test.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\fox-test.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\white-bird-1-test.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\white-bird-2-test.jpg">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

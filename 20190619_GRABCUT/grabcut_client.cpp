@@ -147,14 +147,15 @@ void GrabCutClient::showDstImage() {
 
 void GrabCutClient::saveTwoImages(string s_date, string s_time_elapse) {
   string s_head = "results/";
-  string s_stamp = (string)s_date + "_" + to_string(i_iterate) + "_iter_" +
-                   s_time_elapse + "_s";
+  string s_stamp = (string)s_date + "_" + s_time_elapse + "_s_";
   if (b_opencv) {
-    s_stamp += "_OpenCV";
+    s_stamp += "OpenCV";
+  } else {
+    s_stamp += "Mine_" + to_string(i_iterate) + "_iter";
   }
   string s_ext = ".jpg";
-  string s_src = s_head + "src-" + s_stamp + s_ext;
-  string s_dst = s_head + "dst-" + s_stamp + s_ext;
+  string s_src = s_head + s_stamp + "_src" + s_ext;
+  string s_dst = s_head + s_stamp + "_dst" + s_ext;
   bool b_success_src = imwrite(s_src, img_src_2);
   bool b_success_dst = imwrite(s_dst, img_dst);
   if (b_success_src == false || b_success_dst == false) {
