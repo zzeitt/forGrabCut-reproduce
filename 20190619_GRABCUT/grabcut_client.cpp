@@ -1,14 +1,16 @@
 #include "grabcut_client.h"
+#include <time.h>
 #include <chrono>
 
 using namespace std::chrono;
 
-GrabCutClient::GrabCutClient(String file_path, int i_iterate_arg)
-    : win_src{"Image SRC"},
+GrabCutClient::GrabCutClient(String file_path, int i_iterate_arg,
+                             bool b_opencv_arg)
+    : b_opencv{b_opencv_arg},
+      win_src{"Image SRC"},
       win_dst{"Image DST"},
       gc_method{5, 3, 5, 3},
-      i_iterate{i_iterate_arg},
-      i_time_total{0} {
+      i_iterate{i_iterate_arg} {
   /*******************初始化*******************/
   try {
     img_src = imread(file_path);
@@ -34,11 +36,33 @@ GrabCutClient::GrabCutClient(String file_path, int i_iterate_arg)
   /*******************按键响应*******************/
   char c = waitKey(0);
   if (c == 'g') {
-    iterateLabelMask();
+    auto start = high_resolution_clock::now();  // 计时开始
+    if (b_opencv) {
+      Mat mat_temp_1, mat_temp_2;
+      grabCut(img_src, mask_alpha, rect_fgd, mat_temp_1, mat_temp_2, 1,
+              GC_INIT_WITH_RECT);
+    } else {
+      iterateLabelMask();
+    }
+    auto stop = high_resolution_clock::now();  //计时结束
+    auto duration = duration_cast<seconds>(stop - start);
+    cout << endl
+         << " ===================>>>【共计用时" << duration.count() << "秒】"
+         << endl;
     showDstImage();
+    cout << endl << " ===================>>>【按 s 键保存】" << endl;
+    char s = waitKey(0);
+    if (s == 's') {
+      // 生成时间戳
+      auto now = time(nullptr);
+      ostringstream os;
+      os << put_time(gmtime(&now), "%F-%H-%M-%S");
+      // 保存图片
+      saveTwoImages(os.str());
+    }
+    waitKey(0);
+    destroyAllWindows();
   }
-  waitKey(0);
-  destroyAllWindows();
 }
 
 void GrabCutClient::redrawSrcImage() {
@@ -103,16 +127,11 @@ void GrabCutClient::iterateLabelMask() {
     mask_alpha = gc_method.getMaskAlpha();
     ///////////////////////////////
     auto stop = high_resolution_clock::now();  //计时结束
-    auto duration = duration_cast<microseconds>(stop - start);
-    int i_time_du = (int)duration.count() / 1000000;
-    i_time_total += i_time_du;
+    auto duration = duration_cast<seconds>(stop - start);
     cout << " ===================>>>【第（" << (i + 1) << "）次迭代用时 "
-         << i_time_du << " 秒】" << endl
+         << duration.count() << " 秒】" << endl
          << endl;
-    //showDstImage();
   }
-  cout << endl
-       << " ===================>>>【共计用时" << i_time_total << "秒】" << endl;
 }
 
 void GrabCutClient::showDstImage() {
@@ -124,4 +143,18 @@ void GrabCutClient::showDstImage() {
   namedWindow(win_dst, WINDOW_AUTOSIZE);
   waitKey(1);
   imshow(win_dst, img_dst);
+}
+
+void GrabCutClient::saveTwoImages(string s_date) {
+  string s_src =
+      (string) "results/" + (string) "src-" + (string)s_date + ".jpg";
+  bool b_success_src = imwrite(s_src, img_src_2);
+  string s_dst =
+      (string) "results/" + (string) "dst-" + (string)s_date + ".jpg";
+  bool b_success_dst = imwrite(s_dst, img_dst);
+  if (b_success_src == false || b_success_dst == false) {
+    cout << " ===================>>>【Failed to save the image!】" << endl;
+  } else {
+    cout << " ===================>>>【Images saved.】" << endl;
+  }
 }
