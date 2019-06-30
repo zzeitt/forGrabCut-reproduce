@@ -1,6 +1,6 @@
 #include "grabcut_client.h"
 
 int main() {
-  GrabCutClient gc_client("images/owl-test.jpg", 3, true);
+  GrabCutClient gc_client("images/white-bird-2-test.jpg", 1, false);
   return 0;
 }

@@ -38,7 +38,7 @@ GrabCutClient::GrabCutClient(String file_path, int i_iterate_arg,
     auto start = high_resolution_clock::now();  // 计时开始
     if (b_opencv) {
       Mat mat_temp_1, mat_temp_2;
-      grabCut(img_src, mask_alpha, rect_fgd, mat_temp_1, mat_temp_2, 1,
+      grabCut(img_src, mask_alpha, rect_fgd, mat_temp_1, mat_temp_2, i_iterate,
               GC_INIT_WITH_RECT);
     } else {
       iterateLabelMask();
@@ -120,10 +120,29 @@ void GrabCutClient::iterateLabelMask() {
          << " ===================>>>【第（" << (i + 1) << "）次迭代开始】"
          << endl;
     auto start = high_resolution_clock::now();  // 计时开始
-    /////////// 耗时部分 ///////////
+    //////////////////////// 耗时部分 /////////////////////////
+    //////////
+    auto start_func = high_resolution_clock::now();  // 计时开始
     gc_method.updateTwoIndexMat();
+    auto stop_func = high_resolution_clock::now();  //计时结束
+    auto duration_func = duration_cast<seconds>(stop_func - start_func);
+    cout << " ===================>>>【根据概率值更新索引 · 用时 "
+         << duration_func.count() << " 秒】" << endl;
+    //////////
+    start_func = high_resolution_clock::now();  // 计时开始
     gc_method.fitTwoGMMs();
+    stop_func = high_resolution_clock::now();  //计时结束
+    duration_func = duration_cast<seconds>(stop_func - start_func);
+    cout << " ===================>>>【拟合高斯模型 · 用时 "
+         << duration_func.count() << " 秒】" << endl;
+    //////////
+    start_func = high_resolution_clock::now();  // 计时开始
     gc_method.updateMaskAlpha(gc_graph);
+    stop_func = high_resolution_clock::now();  //计时结束
+    duration_func = duration_cast<seconds>(stop_func - start_func);
+    cout << " ===================>>>【执行图的最小割算法 · 用时 "
+         << duration_func.count() << " 秒】" << endl;
+    //////////
     mask_alpha = gc_method.getMaskAlpha();
     ///////////////////////////////
     auto stop = high_resolution_clock::now();  //计时结束
@@ -149,7 +168,7 @@ void GrabCutClient::saveTwoImages(string s_date, string s_time_elapse) {
   string s_head = "results/";
   string s_stamp = (string)s_date + "_" + s_time_elapse + "_s_";
   if (b_opencv) {
-    s_stamp += "OpenCV";
+    s_stamp += "OpenCV_" + to_string(i_iterate) + "_iter";
   } else {
     s_stamp += "Mine_" + to_string(i_iterate) + "_iter";
   }
