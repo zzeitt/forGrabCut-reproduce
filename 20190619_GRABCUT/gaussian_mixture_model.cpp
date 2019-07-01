@@ -31,10 +31,10 @@ void Gau::doComputation(int i_pix_gmm_count) {
     mat_cov /= i_rows_new;
   } catch (char* str) {
     mat_mean = Mat::zeros(1, i_dim, CV_64FC1);  // 行向量
-    mat_cov = Mat::ones(i_dim, i_dim, CV_64FC1);
+    mat_cov = Mat::ones(i_dim, i_dim, CV_64FC1) * 0.01;
   } catch (...) {
     mat_mean = Mat::zeros(1, i_dim, CV_64FC1);  // 行向量
-    mat_cov = Mat::ones(i_dim, i_dim, CV_64FC1);
+    mat_cov = Mat::ones(i_dim, i_dim, CV_64FC1) * 0.01;
   }
   // 输出测试
   // cout << "==================Gau==================" << endl;

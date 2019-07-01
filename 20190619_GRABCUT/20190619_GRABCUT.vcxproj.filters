@@ -105,5 +105,11 @@
     <Image Include="images\white-bird-2-test.jpg">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="images\jellyfish.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\jellyfish-test.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

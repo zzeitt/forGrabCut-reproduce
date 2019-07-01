@@ -3,12 +3,13 @@
 
 using namespace std::chrono;
 
-GrabCutClient::GrabCutClient(String file_path, int i_iterate_arg,
-                             bool b_opencv_arg)
+GrabCutClient::GrabCutClient(String file_path, bool b_opencv_arg,
+                             int i_comp_arg, int i_iterate_arg)
     : b_opencv{b_opencv_arg},
       win_src{"Image SRC"},
       win_dst{"Image DST"},
-      gc_method{5, 3, 5, 3},
+      i_comp{i_comp_arg},
+      gc_method{i_comp, 3, i_comp, 3},
       i_iterate{i_iterate_arg} {
   /*******************³õÊ¼»¯*******************/
   try {
@@ -166,11 +167,12 @@ void GrabCutClient::showDstImage() {
 
 void GrabCutClient::saveTwoImages(string s_date, string s_time_elapse) {
   string s_head = "results/";
-  string s_stamp = (string)s_date + "_" + s_time_elapse + "_s_";
+  string s_stamp = (string)s_date + "_" + s_time_elapse + "_s";
   if (b_opencv) {
-    s_stamp += "OpenCV_" + to_string(i_iterate) + "_iter";
+    s_stamp += "_OpenCV_" + to_string(i_iterate) + "_iter";
   } else {
-    s_stamp += "Mine_" + to_string(i_iterate) + "_iter";
+    s_stamp += "_Mine_" + to_string(i_iterate) + "_iter" + "_" +
+               to_string(i_comp) + "_comp";
   }
   string s_ext = ".jpg";
   string s_src = s_head + s_stamp + "_src" + s_ext;
@@ -180,6 +182,9 @@ void GrabCutClient::saveTwoImages(string s_date, string s_time_elapse) {
   if (b_success_src == false || b_success_dst == false) {
     cout << " ===================>>>¡¾Failed to save the image!¡¿" << endl;
   } else {
-    cout << " ===================>>>¡¾Images saved.¡¿" << endl;
+    cout << endl << " ===================>>>¡¾Images saved.¡¿" << endl;
+    cout << " ** filename **: " << endl;
+    cout << " " << s_src << endl;
+    cout << " " << s_dst << endl;
   }
 }

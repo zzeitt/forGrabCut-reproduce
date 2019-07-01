@@ -42,7 +42,7 @@ void GrabCutMethod::clusterPixels() {
            10, KMEANS_RANDOM_CENTERS);
     kmeans(mat_pixs_bgd, i_bgd_comp, mat_pixs_bgd_k,
            TermCriteria(TermCriteria::MAX_ITER + TermCriteria::EPS, 10, 1.0),
-           10, KMEANS_RANDOM_CENTERS);
+           0, KMEANS_PP_CENTERS);
   } catch (char* str) {
     cout << "¡¾Error¡¿: " << str << endl;
   } catch (...) {

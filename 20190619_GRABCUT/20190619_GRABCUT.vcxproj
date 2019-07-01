@@ -143,6 +143,8 @@
     <Image Include="images\flamingo.jpg" />
     <Image Include="images\fox-test.jpg" />
     <Image Include="images\fox.jpg" />
+    <Image Include="images\jellyfish-test.jpg" />
+    <Image Include="images\jellyfish.jpg" />
     <Image Include="images\owl-test.jpg" />
     <Image Include="images\owl.jpg" />
     <Image Include="images\white-bird-1-test.jpg" />
