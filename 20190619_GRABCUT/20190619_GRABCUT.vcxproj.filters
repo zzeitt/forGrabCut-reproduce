@@ -36,6 +36,9 @@
     <ClCompile Include="grabcut_graph.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="grabcut_metrics.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="grabcut_client.h">
@@ -54,6 +57,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="grabcut_graph.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="grabcut_metrics.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -109,6 +115,36 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="images\jellyfish-test.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="images\white-bird-2-ground-truth.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="results\2019-07-02-05-32-28_24_s_Mine_5_iter_1_comp_alpha.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="results\2019-07-02-05-31-38_19_s_Mine_4_iter_1_comp_alpha.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="results\2019-07-02-05-30-46_14_s_Mine_3_iter_1_comp_alpha.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="results\2019-07-02-05-29-47_10_s_Mine_2_iter_1_comp_alpha.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="results\2019-07-02-05-28-58_23_s_Mine_1_iter_5_comp_alpha.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="results\2019-07-02-05-28-10_19_s_Mine_1_iter_4_comp_alpha.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="results\2019-07-02-05-27-29_14_s_Mine_1_iter_3_comp_alpha.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="results\2019-07-02-05-26-29_10_s_Mine_1_iter_2_comp_alpha.jpg">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="results\2019-07-02-05-24-54_5_s_Mine_1_iter_1_comp_alpha.jpg">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

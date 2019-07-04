@@ -119,6 +119,7 @@
     <ClInclude Include="grabcut_client.h" />
     <ClInclude Include="grabcut_graph.h" />
     <ClInclude Include="grabcut_method.h" />
+    <ClInclude Include="grabcut_metrics.h" />
     <ClInclude Include="VladimirKolmogorov\block.h" />
     <ClInclude Include="VladimirKolmogorov\graph.h" />
   </ItemGroup>
@@ -127,6 +128,7 @@
     <ClCompile Include="grabcut_client.cpp" />
     <ClCompile Include="grabcut_graph.cpp" />
     <ClCompile Include="grabcut_method.cpp" />
+    <ClCompile Include="grabcut_metrics.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="VladimirKolmogorov\graph.cpp" />
     <ClCompile Include="VladimirKolmogorov\maxflow.cpp" />
@@ -149,8 +151,18 @@
     <Image Include="images\owl.jpg" />
     <Image Include="images\white-bird-1-test.jpg" />
     <Image Include="images\white-bird-1.jpg" />
+    <Image Include="images\white-bird-2-ground-truth.jpg" />
     <Image Include="images\white-bird-2-test.jpg" />
     <Image Include="images\white-bird-2.jpg" />
+    <Image Include="results\2019-07-02-05-24-54_5_s_Mine_1_iter_1_comp_alpha.jpg" />
+    <Image Include="results\2019-07-02-05-26-29_10_s_Mine_1_iter_2_comp_alpha.jpg" />
+    <Image Include="results\2019-07-02-05-27-29_14_s_Mine_1_iter_3_comp_alpha.jpg" />
+    <Image Include="results\2019-07-02-05-28-10_19_s_Mine_1_iter_4_comp_alpha.jpg" />
+    <Image Include="results\2019-07-02-05-28-58_23_s_Mine_1_iter_5_comp_alpha.jpg" />
+    <Image Include="results\2019-07-02-05-29-47_10_s_Mine_2_iter_1_comp_alpha.jpg" />
+    <Image Include="results\2019-07-02-05-30-46_14_s_Mine_3_iter_1_comp_alpha.jpg" />
+    <Image Include="results\2019-07-02-05-31-38_19_s_Mine_4_iter_1_comp_alpha.jpg" />
+    <Image Include="results\2019-07-02-05-32-28_24_s_Mine_5_iter_1_comp_alpha.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
