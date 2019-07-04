@@ -14,6 +14,7 @@ class GrabCutClient {
   Mat img_src_2;            // 用于用户操作的原图拷贝
   Rect rect_fgd;            // 前景矩形框
   Mat mask_alpha;           // 所属类别的掩膜
+  Mat mask_fgd;             // 前景专属掩膜
   Mat img_dst;              // 生成图片
   bool b_opencv;            // 是否执行OpenCV内置算法
   int i_iterate;            // 迭代次数

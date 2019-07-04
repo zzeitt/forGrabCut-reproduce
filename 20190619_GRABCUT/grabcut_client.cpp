@@ -155,7 +155,6 @@ void GrabCutClient::iterateLabelMask() {
 }
 
 void GrabCutClient::showDstImage() {
-  Mat mask_fgd;
   // 仅显示判定为GC_PR_FGD的区域
   compare(mask_alpha, GC_PR_FGD, mask_fgd, CMP_EQ);
   // 按照mask_alpha指示进行copy
@@ -177,14 +176,18 @@ void GrabCutClient::saveTwoImages(string s_date, string s_time_elapse) {
   string s_ext = ".jpg";
   string s_src = s_head + s_stamp + "_src" + s_ext;
   string s_dst = s_head + s_stamp + "_dst" + s_ext;
+  string s_alpha = s_head + s_stamp + "_alpha" + s_ext;
   bool b_success_src = imwrite(s_src, img_src_2);
   bool b_success_dst = imwrite(s_dst, img_dst);
-  if (b_success_src == false || b_success_dst == false) {
+  bool b_success_alpha = imwrite(s_alpha, mask_fgd);
+  if (b_success_src == false || b_success_dst == false ||
+      b_success_alpha == false) {
     cout << " ===================>>>【Failed to save the image!】" << endl;
   } else {
     cout << endl << " ===================>>>【Images saved.】" << endl;
     cout << " ** filename **: " << endl;
     cout << " " << s_src << endl;
     cout << " " << s_dst << endl;
+    cout << " " << s_alpha << endl;
   }
 }
