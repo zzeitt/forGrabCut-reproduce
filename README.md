@@ -2,6 +2,8 @@
 > ### Reproduced a paper: 
 > ### [*"GrabCut": interactive foreground extraction using iterated graph cuts*][1]
 
+![teaser](teaser.drawio.png)
+
 ## Structure
 * GrabCutClient
   * GrabCutMethod
